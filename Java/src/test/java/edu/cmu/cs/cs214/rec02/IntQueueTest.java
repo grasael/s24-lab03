@@ -1,7 +1,7 @@
 package edu.cmu.cs.cs214.rec02;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -38,10 +39,19 @@ public class IntQueueTest {
     @Before
     public void setUp() {
         // comment/uncomment these lines to test each class
-        mQueue = new LinkedIntQueue();
-    //    mQueue = new ArrayIntQueue();
+        //mQueue = new LinkedIntQueue();
+        mQueue = new ArrayIntQueue();
 
         testList = new ArrayList<>(List.of(1, 2, 3));
+    }
+
+    @Test
+    public void testClear() {
+        testList.forEach(n -> mQueue.enqueue(n));
+        mQueue.clear();
+        assertTrue(mQueue.isEmpty());
+        assertTrue(mQueue.peek()==null);
+        assertEquals(0, mQueue.size());
     }
 
     @Test
@@ -52,20 +62,22 @@ public class IntQueueTest {
 
     @Test
     public void testNotEmpty() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(3);
+        assertTrue(!mQueue.isEmpty());
     }
 
     @Test
     public void testPeekEmptyQueue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.peek();
+        assertTrue(mQueue.isEmpty());
     }
 
     @Test
     public void testPeekNoEmptyQueue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(33);
+        mQueue.peek();
+        System.out.println(mQueue.peek());
+        assertTrue(!mQueue.isEmpty());
     }
 
     @Test
@@ -80,9 +92,16 @@ public class IntQueueTest {
 
     @Test
     public void testDequeue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        for (int num : testList) {
+            mQueue.enqueue(num);
+        }
+        for (int num : testList) {
+            assertTrue(num == mQueue.dequeue());
+        }
+        assertTrue(mQueue.dequeue() == null);
+        assertTrue(mQueue.isEmpty());
     }
+    
 
     @Test
     public void testContent() throws IOException {
@@ -105,5 +124,19 @@ public class IntQueueTest {
         }
     }
 
-
+    @Test
+    public void testEnsureCapacity() {
+        for (int i = 0; i < 10; i++) { 
+            mQueue.enqueue(i);
+        }
+        for (int i = 0; i < 5; i++) {
+            assertEquals(Integer.valueOf(i), mQueue.dequeue());
+        }
+        for (int i = 10; i < 20; i++) { 
+            mQueue.enqueue(i);
+        }
+        for (int i = 5; i < 20; i++){
+            assertEquals(Integer.valueOf(i), mQueue.dequeue());
+        }
+    }
 }
